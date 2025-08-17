@@ -1,0 +1,35 @@
+{
+  "name": "hike-application-automation",
+  "version": "1.0.0",
+  "description": "Automated hiking application form filling tool using Playwright - Portfolio Demo Version",
+  "main": "hike_apply.js",
+  "scripts": {
+    "start": "node hike_apply.js",
+    "test": "DRY_RUN=true node hike_apply.js",
+    "generate-fake-data": "node create_fake_data.js"
+  },
+  "keywords": [
+    "automation",
+    "playwright",
+    "web-scraping",
+    "form-filling",
+    "hiking",
+    "taiwan",
+    "excel",
+    "demo"
+  ],
+  "author": "Portfolio Demo",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "playwright": "^1.54.2",
+    "xlsx": "^0.18.5"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YOUR_USERNAME/hike-application-automation.git"
+  }
+}
