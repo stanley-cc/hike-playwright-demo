@@ -13,10 +13,11 @@ const readline = require('readline');
 
 
 const { loadHikeExcelData, updateApplicationStatus } = require('./fill_apply_data');
-const { 
-  navigateToNextApplication, 
-  waitBetweenApplications 
+const {
+  navigateToNextApplication,
+  waitBetweenApplications
 } = require('./success_handler');
+const { solveWith2Captcha } = require('./captcha_solver');
 
 
 // ---------- Config ----------
@@ -24,7 +25,10 @@ const START_URL = 'https://hike.taiwan.gov.tw/apply_1.aspx?search=2';
 
 // Toggle when you add an external captcha service later:
 // { mode: 'manual' } or { mode: '2captcha', apiKey: 'XXXX' }
-const CAPTCHA_CONFIG = { mode: 'manual' };
+const CAPTCHA_CONFIG = {
+  mode: process.env.CAPTCHA_MODE || 'manual',
+  apiKey: process.env.CAPTCHA_API_KEY
+};
 
 // ---------- Utilities ----------
 function waitForAspNetIdle(page, timeoutMs = 15000) {
@@ -123,14 +127,19 @@ async function handleCaptcha(page, config = { mode: 'manual' }) {
   }
 
   if (config.mode === '2captcha') {
-    // Placeholder for future integration.
-    // 1) Grab the captcha image URL
+    const apiKey = config.apiKey || process.env.CAPTCHA_API_KEY;
+    if (!apiKey) {
+      throw new Error('2Captcha API key is required when using mode="2captcha"');
+    }
+
     const img = page.locator('#con_imgcode, img[alt*="驗證碼"], img[title*="驗證碼"]').first();
-    const src = await img.getAttribute('src');
-    // 2) Download the image (you may need cookies), send to 2Captcha, get solution.
-    // 3) Fill the solution into the captcha input and proceed.
-    // For now, we just throw to remind you to wire it.
-    throw new Error('2Captcha mode selected, but solver not yet implemented here.');
+    await img.waitFor({ state: 'visible', timeout: 10000 });
+    const buffer = await img.screenshot();
+    const solution = await solveWith2Captcha(buffer.toString('base64'), apiKey);
+
+    const input = page.locator('#con_txtcode, input[name*="code" i], input[placeholder*="驗證碼"]').first();
+    await input.fill(solution);
+    return;
   }
 }
 
