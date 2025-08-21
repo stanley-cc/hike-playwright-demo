@@ -45,6 +45,18 @@ node hike_apply.js
 npm run test
 ```
 
+## 驗證碼設定
+
+預設為手動輸入驗證碼。如欲透過 2Captcha 自動解碼，可使用環境變數設定：
+
+```bash
+export CAPTCHA_MODE=2captcha
+export CAPTCHA_API_KEY=你的2Captcha_API_key
+node hike_apply.js
+```
+
+若未提供 `CAPTCHA_API_KEY` 或無法成功解析，程式會拋出錯誤。
+
 ## Excel 檔案格式
 
 Excel 檔案需包含以下工作表：
@@ -60,7 +72,7 @@ Excel 檔案需包含以下工作表：
 
 - 本工具僅供學習和展示用途
 - 請勿用於實際大量申請
-- 驗證碼需要手動輸入
+- 驗證碼預設需手動輸入，可透過 2Captcha 自動解碼
 - 建議在正式申請前先使用測試模式
 
 ## 授權
